@@ -1,8 +1,8 @@
 # Multi-Particle-Tracking
-Based on Daniel Blair and Eric Dufresne's MATLAB code
-http://site.physics.georgetown.edu/matlab/index.html
-"Methods of Digital Video Microscopy for Colloidal Studies", John C. Crocker and David G. Grier, J. Colloid Interface Sci. 179, 298 (1996).
-
+Based on Daniel Blair and Eric Dufresne's MATLAB code  
+http://site.physics.georgetown.edu/matlab/index.html  
+"Methods of Digital Video Microscopy for Colloidal Studies", John C. Crocker and David G. Grier, J. Colloid Interface Sci. 179, 298 (1996).  
+  
 Hansen Zhao: zhaohs12@163.com
 
 ### Tutorial
