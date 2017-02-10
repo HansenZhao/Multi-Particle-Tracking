@@ -98,7 +98,7 @@ classdef DETracker < handle
                     plot(varargin{1}.getAxes(),tmpTrace(:,1),tmpTrace(:,2),'r');
                     curPoint = tmpTrace(tmpTrace(:,3)==varargin{1}.curImageIndex,1:2);
                     if ~isempty(curPoint)
-                        scatter(curPoint(:,1),curPoint(:,2),20,'r','filled');
+                        scatter(curPoint(:,1),curPoint(:,2),20,'b','filled');
                     end
                 end
                 set(varargin{1}.getAxes(),'NextPlot','replacechildren');
