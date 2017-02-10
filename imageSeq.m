@@ -3,6 +3,7 @@ classdef imageSeq < handle
     properties
         curImageIndex;
         seqLength;
+        sequencePath;
     end
     
     properties (Access = private)
@@ -21,6 +22,7 @@ classdef imageSeq < handle
         function obj = imageSeq()
             [fileNames,filePath,index] = uigetfile('*.*','Please Select Image Sequence...','Multiselect','on');
             if index
+                obj.sequencePath = filePath;
                 obj.seqLength = length(fileNames);
                 tmp = double(imread(strcat(filePath,fileNames{1})));
                 tmp = sum(tmp,3);

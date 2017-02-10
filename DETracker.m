@@ -13,6 +13,9 @@ classdef DETracker < handle
     properties(Access = private)
         particleTrace;
         param;
+        pSize;
+        intensRatio;
+        maxVelocity;
     end
     
     methods
@@ -29,6 +32,11 @@ classdef DETracker < handle
         end
         
         function getPTrace(obj,pSize,intensityRatio,isShowRes,maxVel)
+            
+            obj.pSize = pSize;
+            obj.intensRatio = intensityRatio;
+            obj.maxVelocity = maxVel;
+            
             if isShowRes
                 [loc,~]=images2pl(obj.imSeq.getImage(),pSize,intensityRatio,1);
             else
@@ -85,6 +93,26 @@ classdef DETracker < handle
         
         function show(obj)
             obj.imSeq.show();
+        end
+        
+        function save(obj,fileName)
+            fid = fopen(strcat(obj.imSeq.sequencePath,fileName,'.csv'),'w');
+            fprintf(fid,'%s\n','DETracker Particle Track Result');
+            fprintf(fid,'Trace Number: %d\n',obj.traceNum);
+            fprintf(fid,'Sequence Length: %d\n\n',obj.imSeq.seqLength);
+            fprintf(fid,'Tracking Setting:\n');
+            fprintf(fid,'Particle Size: %d\nIntensity Ratio: %3.2f\nMax Velocity: %d\n',...
+                    obj.pSize,obj.intensRatio,obj.maxVelocity);
+            fprintf(fid,'mem = %d, dim = %d, good = %d\n\n',obj.param.mem,obj.param.dim,obj.param.good);
+            fprintf(fid,'Particle Trace Data\n');
+            fprintf(fid,'X coord,Ycoord,Time index,Particle Id\n');
+            L = size(obj.particleTrace,1);
+            for m = 1:1:L
+                tmp = obj.particleTrace(m,:);
+                fprintf(fid,'%f,%f,%d,%d\n',tmp(1),tmp(2),tmp(3),tmp(4));
+            end
+            fclose(fid);
+            fprintf(1,'Data file has been written in %s\n',strcat(obj.imSeq.sequencePath,fileName,'.csv'));
         end
         
     end
