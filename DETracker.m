@@ -12,6 +12,7 @@ classdef DETracker < handle
     
     properties(Access = private)
         particleTrace;
+        param;
     end
     
     methods
@@ -20,6 +21,11 @@ classdef DETracker < handle
             obj.imSeq.listenUpdate(@(src,eventdata)obj.updateTrace(src,eventdata));
             obj.traceNum = 0;
             obj.particleTrace = [];
+            obj.param = struct();
+            obj.param.mem = 0;
+            obj.param.dim = 2;
+            obj.param.good = 0;
+            obj.param.quiet = 0;
         end
         
         function getPTrace(obj,pSize,intensityRatio,isShowRes,maxVel)
@@ -29,20 +35,25 @@ classdef DETracker < handle
                 [loc,~]=images2pl(obj.imSeq.getImage(),pSize,intensityRatio);
             end
             
-            param = struct();
             answer = inputdlg({'param.mem','param.dim','param.good','param.quiet'},'param set',[1],{'0','2','0','0'});
+            disp(strcat('mem =',32,answer{1},32,...
+                        'dim =',32,answer{2},32,...
+                        'good =',32,answer{3},32,...
+                        'quiet =',32,answer{4}));
             
-            param.mem = str2num(answer{1});
-            param.dim = str2num(answer{2});
-            param.good = str2num(answer{3});
-            param.quiet = str2num(answer{4});
+            obj.param.mem = str2num(answer{1});
+            obj.param.dim = str2num(answer{2});
+            obj.param.good = str2num(answer{3});
+            obj.param.quiet = str2num(answer{4});
+            
 
-            obj.particleTrace = track(loc,maxVel,param);
+            obj.particleTrace = track(loc,maxVel,obj.param);
 
             obj.traceNum = max(obj.particleTrace(:,4));
             
             obj.showId = [];
             obj.imSeq.curImageIndex = 1;
+            disp(strcat(num2str(obj.traceNum),32,'traces has been defined!'));
         end
         
         function p = getParticle(obj,varargin)
@@ -57,7 +68,14 @@ classdef DETracker < handle
             end
         end
         
-        function setShowId(obj,ids)
+        function setShowId(obj,varargin)
+            
+            if isempty(varargin)
+                ids = 1:1:obj.traceNum;
+            else
+                ids = varargin{1};
+            end
+            
             if ids <= obj.traceNum
                 obj.showId = ids;
             else
