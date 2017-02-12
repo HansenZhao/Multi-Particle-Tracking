@@ -32,7 +32,10 @@ classdef DETracker < handle
         end
         
         function getPTrace(obj,pSize,intensityRatio,isShowRes,maxVel)
-            
+            if ~mod(pSize,2)
+                warndlg('Particle Size should be odd!','DETracker');
+                return;
+            end
             obj.pSize = pSize;
             obj.intensRatio = intensityRatio;
             obj.maxVelocity = maxVel;
@@ -44,6 +47,11 @@ classdef DETracker < handle
             end
             
             answer = inputdlg({'param.mem','param.dim','param.good','param.quiet'},'param set',[1],{'0','2','0','0'});
+            
+            if isempty(answer)
+                return;
+            end
+            
             disp(strcat('mem =',32,answer{1},32,...
                         'dim =',32,answer{2},32,...
                         'good =',32,answer{3},32,...
@@ -124,6 +132,7 @@ classdef DETracker < handle
                 for m = 1:1:length(obj.showId)
                     tmpTrace = obj.getParticle(m);
                     plot(varargin{1}.getAxes(),tmpTrace(:,1),tmpTrace(:,2),'r');
+                    text(varargin{1}.getAxes(),tmpTrace(1,1)+1,tmpTrace(1,2)+1,num2str(m),'Color','y','FontSize',8);
                     curPoint = tmpTrace(tmpTrace(:,3)==varargin{1}.curImageIndex,1:2);
                     if ~isempty(curPoint)
                         scatter(curPoint(:,1),curPoint(:,2),20,'b','filled');
